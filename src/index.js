@@ -4,4 +4,4 @@ const field = new Field();
 
 field.drawField();
 
-console.log(field.colunCells);
+// field.play();
