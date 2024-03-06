@@ -1,6 +1,9 @@
+import Cell from './Cell.js';
+
 class Field {
   rowsCount;
   columnsCount;
+  colunCells = [];
   playingField = document.querySelector('#playing-field')
   cellSize = '5px';
 
@@ -17,13 +20,20 @@ class Field {
       rowEl.classList.add('row');
 
       for (let columnIndex = 0; columnIndex < this.columnsCount; columnIndex++) {
+
         const columnEl = document.createElement('div');
         columnEl.classList.add('col');
         rowEl.appendChild(columnEl);
+
+        this.addCell(new Cell(rowIndex, columnIndex, columnEl));
       }
 
       this.playingField.appendChild(rowEl);
     }
+  }
+
+  addCell(cell) {
+    this.colunCells.push(cell)
   }
 
   addStyles() {

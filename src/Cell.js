@@ -1,14 +1,12 @@
 class Cell {
   row;
   column;
+  element;
 
-  constructor(row, column) {
+  constructor(row, column, element) {
     this.row = row;
     this.column = column;
-  }
-
-  static say(message) {
-    console.log(message);
+    this.element = element;
   }
 }
 
