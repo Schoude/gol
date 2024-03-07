@@ -16,13 +16,14 @@ class Field {
   rowCellArrays = [];
   playingField = document.querySelector('#playing-field')
   cellSize = '10px';
+  isPlaying = false;
 
   // Game Loop Parameter
   lastFrameTime = 0;
-  fps = 3; // Frames per second
+  fps = 15; // Frames per second = cell generations per second
   frameDelay = 1000 / this.fps;
 
-  constructor(rowsCount = 5, columnsCount = 5) {
+  constructor(rowsCount = 70, columnsCount = 150) {
     this.rowsCount = rowsCount;
     this.columnsCount = columnsCount;
   }
@@ -61,12 +62,10 @@ class Field {
         inline-size: max-content;
         margin-inline: auto;
         display: grid;
-        gap: .2rem;
         grid-template-rows: repeat(${this.rowsCount}, ${this.cellSize});
       }
       .row {
         display: grid;
-        gap: .2rem;
         grid-template-columns: repeat(${this.columnsCount}, ${this.cellSize});
       }
       .col {
@@ -84,6 +83,20 @@ class Field {
     });
   }
 
+  seedField(seedCellsCount) {
+    for (let index = 0; index < seedCellsCount; index++) {
+      const seedRow = Math.floor(Math.random() * this.rowsCount);
+      const seedColumn = Math.floor(Math.random() * this.columnsCount);
+
+      const seedCell = this.rowCellArrays[seedRow][seedColumn];
+      seedCell.setStatus('alive');
+    }
+  }
+
+  checkCells() {
+    this.rowCellArrays.flat().forEach(c => c.checkStatus())
+  }
+
   gameLoop(timestamp) {
     // Define variables
     const deltaTime = timestamp - this.lastFrameTime;
@@ -91,13 +104,16 @@ class Field {
     if (deltaTime >= this.frameDelay) {
       this.lastFrameTime = timestamp - (deltaTime % this.frameDelay);
 
-      this.fillNeighbors();
+      this.checkCells();
     }
 
     requestAnimationFrame((t) => this.gameLoop(t))
   }
 
-  play() {
+  play(seedCellsCount) {
+    console.log('play game');
+    this.seedField(seedCellsCount);
+
     requestAnimationFrame((t) => this.gameLoop(t))
   }
 }

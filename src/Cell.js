@@ -50,6 +50,33 @@ class Cell {
     ];
   }
 
+  // 3. **Birth**: A dead cell with exactly three live neighbors becomes alive in the next generation, simulating reproduction.
+  // 4. **Survival**: A live cell with two or three live neighbors remains alive in the next generation, simulating survival.
+  // 5. **Death**: In all other cases, a cell dies or remains dead in the next generation due to overpopulation (more than three live neighbors) or loneliness (fewer than two live neighbors).
+  checkStatus() {
+    const livingNeighbors = this.neighbors.reduce((neighborCount, neighborCell) => {
+      if (neighborCell.status === 'alive') {
+        neighborCount = neighborCount + 1;
+      }
+
+      return neighborCount;
+    }, 0);
+
+    // Birth
+    if (this.status === 'dead' && livingNeighbors === 3) {
+      this.setStatus('alive');
+
+      return;
+    }
+
+    if (this.status === 'alive') {
+      // 5. **Death**: In all other cases, a cell dies or remains dead in the next generation due to overpopulation (more than three live neighbors) or loneliness (fewer than two live neighbors).
+      if (livingNeighbors > 3 || livingNeighbors < 2) {
+        this.setStatus('dead');
+      }
+    }
+  }
+
   setStatus(status) {
     this.status = status;
 
