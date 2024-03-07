@@ -1,18 +1,28 @@
 import Cell from './Cell.js';
 
+// Conway's Game of Life is a cellular automaton devised by mathematician John Horton Conway. Here are the basic rules:
+// 1. **Cells**: The game is played on a grid of cells, each of which can be in one of two states: alive or dead.
+// 2. **Neighborhood**: Each cell interacts with its eight neighbors, which are the cells horizontally, vertically, or diagonally adjacent to it.
+
+// States
+// 3. **Birth**: A dead cell with exactly three live neighbors becomes alive in the next generation, simulating reproduction.
+// 4. **Survival**: A live cell with two or three live neighbors remains alive in the next generation, simulating survival.
+// 5. **Death**: In all other cases, a cell dies or remains dead in the next generation due to overpopulation (more than three live neighbors) or loneliness (fewer than two live neighbors).
+// These simple rules give rise to complex patterns and behaviors, making Conway's Game of Life a fascinating subject for study and exploration in the field of cellular automata.
+
 class Field {
   rowsCount;
   columnsCount;
   rowCellArrays = [];
   playingField = document.querySelector('#playing-field')
-  cellSize = '5px';
+  cellSize = '10px';
 
   // Game Loop Parameter
   lastFrameTime = 0;
   fps = 3; // Frames per second
   frameDelay = 1000 / this.fps;
 
-  constructor(rowsCount = 50, columnsCount = 50) {
+  constructor(rowsCount = 5, columnsCount = 5) {
     this.rowsCount = rowsCount;
     this.columnsCount = columnsCount;
   }
@@ -68,8 +78,10 @@ class Field {
     document.head.appendChild(styleEl);
   }
 
-  update() {
-    // TODO
+  fillNeighbors() {
+    this.rowCellArrays.flat().forEach(cell => {
+      cell.setNeighbors(this.rowCellArrays);
+    });
   }
 
   gameLoop(timestamp) {
@@ -79,7 +91,7 @@ class Field {
     if (deltaTime >= this.frameDelay) {
       this.lastFrameTime = timestamp - (deltaTime % this.frameDelay);
 
-      this.update();
+      this.fillNeighbors();
     }
 
     requestAnimationFrame((t) => this.gameLoop(t))
